@@ -20,5 +20,19 @@ def index(request):
         }
     )
 
+# urls에서 views.single_post_page로 이동했음.
+# request와 pk를 보내야 함
+def single_post_page(request, pk):
+    post = Post.objects.get(pk=pk)
+    
+    return render(
+        request,
+        'blog/single_post_page.html',
+        {
+            'post':post, 
+        }
+    )
+# 들어온 pk의 값들을 가져오는 것임
+
 # Create your views here.
 
