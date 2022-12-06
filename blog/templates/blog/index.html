@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog</title>
+</head>
+<body>
+    <h1>Blog</h1>
+
+    <!-- 딕셔너리 형태의 post 저장 반복 -->
+    {% for p in posts %}
+        <hr>    <!-- 밑줄 추가 -->
+        <h2>{{ p.title }}</h2>    <!-- 제목 추가 -->
+        <h4>{{ p.create_at }}</h4>    <!-- 글쓴이 추가 -->
+        <p>{{ p.content }}</p>    <!-- 내용 추가 -->
+        <!-- 변수를 적을 때는 중괄호 2개를 써야 한다 -->
+        <!-- 내용은 나오지 않고 제목만 나오는 이유 :
+        models에서 제목이랑 번호만 나오게 지정해두었기 때문임 -->
+    {% endfor %}
+    
+</body>
+</html>
+
+
