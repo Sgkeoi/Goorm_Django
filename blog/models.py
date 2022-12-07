@@ -1,4 +1,5 @@
 from django.db import models
+import os
 
 # DB 연동
 # 1. 함수를 사용하는 방법
@@ -6,6 +7,7 @@ from django.db import models
 
 class Post(models.Model):
     title = models.CharField(max_length=30)
+    hook_text = models.CharField(max_length=100, blank=True)
     content = models.TextField()
     
     head_image = models.ImageField(upload_to='blog/images/%Y/%m/%d', blank=True)
@@ -22,6 +24,14 @@ class Post(models.Model):
     
     def get_absolute_url(self):
         return f'/blog/{self.pk}/'
+    
+    # 경로 제외한 파일명 받아오기
+    def get_file_name(self):
+        return os.path.basename(self.file_upload.name)
+    
+    # 확장자 받아오기
+    def get_file_exit(self):
+        return self.get_file_name().split('.')[-1]
     
     # author : 추후에 작성하겠습니다.
 # Create your models here.

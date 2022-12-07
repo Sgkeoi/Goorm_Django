@@ -98,13 +98,20 @@
                     
                     <!-- 이미지가 없으면 Lorem Picsum 사이트 랜덤 이미지로 연결하기 -->
                     {% else %}
-                        <img class="card-img-top" src="https://picsum.photos/800/200" alt="random_image">
+                        <img class="card-img-top" src="https://picsum.photos/seed/{{ p.id }}/800/200" alt="random_image">
+                                                                    <!-- seed : 고정, {{p.id}} : 그림 바꾸기 -->
                     
                     {% endif %}
                     
                     <div class="card-body">
                         <h2 class="card-title">{{ p.title }}</h2>  <!-- 제목 -->
-                        <p class="card-text">{{ p.content }}</p>  <!-- 내용 -->
+                        
+                        {% if p.hook_text %}  <!-- 요약본 있으면 요약본 출력하기 -->
+                        <h5 class="text-muted">{{ p.hook_text }}</h5>
+                        <!-- post_list에서는 p -->
+                        {% endif %}
+                        
+                        <p class="card-text">{{ p.content | truncatewords:45 }}</p>  <!-- 내용 -->
                         <a href="{{ p.get_absolute_url }}" class="btn btn-primary">Read More &rarr;</a>
                     </div>          <!-- 주소 -->
                     <div class="card-footer text-muted">
