@@ -134,3 +134,4 @@ dmypy.json
 # migration 제외시키기
 # git에서 DB를 관리하지 않게 하기 위함임
 migrations/
+_media

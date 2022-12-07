@@ -8,6 +8,12 @@ class Post(models.Model):
     title = models.CharField(max_length=30)
     content = models.TextField()
     
+    head_image = models.ImageField(upload_to='blog/images/%Y/%m/%d', blank=True)
+    # 연도 폴더 만들고, 월/일 디렉토리를 만든다.
+    # blank=True : 필수 항목이 아니다.
+    
+    file_upload = models.FileField(upload_to='blog/files/%Y/%m/%d', blank=True)
+    
     create_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

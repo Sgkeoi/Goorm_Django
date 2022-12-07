@@ -91,7 +91,17 @@
                 {% for p in post_list %}
                 <!-- Blog Post -->
                 <div class="card mb-4">
-                    <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap">
+                    
+                    {% if p.head_image %}
+                    <!-- p에 head_image가 있으면 아래 구문 실행 없으면 alert 실행-->
+                    <img class="card-img-top" src="{{ p.head_image.url }}" alt="{{ p }} head image">
+                    
+                    <!-- 이미지가 없으면 Lorem Picsum 사이트 랜덤 이미지로 연결하기 -->
+                    {% else %}
+                        <img class="card-img-top" src="https://picsum.photos/800/200" alt="random_image">
+                    
+                    {% endif %}
+                    
                     <div class="card-body">
                         <h2 class="card-title">{{ p.title }}</h2>  <!-- 제목 -->
                         <p class="card-text">{{ p.content }}</p>  <!-- 내용 -->
@@ -103,22 +113,6 @@
                     </div>
                 </div>
                 {% endfor %}
-
-                <!-- Blog Post -->
-                <div class="card mb-4">
-                    <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap">
-                    <div class="card-body">
-                        <h2 class="card-title">Post Title</h2>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis
-                            aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi
-                            vero voluptate voluptatibus possimus, veniam magni quis!</p>
-                        <a href="#" class="btn btn-primary">Read More &rarr;</a>
-                    </div>
-                    <div class="card-footer text-muted">
-                        Posted on January 1, 2017 by
-                        <a href="#">Start Bootstrap</a>
-                    </div>
-                </div>
 
                 <!-- Pagination -->
                 <ul class="pagination justify-content-center mb-4">
