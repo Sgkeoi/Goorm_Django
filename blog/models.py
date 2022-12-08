@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 import os
 
 # DB 연동
@@ -19,8 +20,12 @@ class Post(models.Model):
     create_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    # on_delete: 연결되어 있던 User가 삭제될 때
+    # ForeignKey: 다대일 관계를 정의
+    
     def __str__(self):
-        return f'[{self.pk}]{self.title}'
+        return f'[{self.pk}]{self.title}::{self.author}'
     
     def get_absolute_url(self):
         return f'/blog/{self.pk}/'
