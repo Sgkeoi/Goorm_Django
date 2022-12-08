@@ -7,7 +7,30 @@ class TestView(TestCase) :
     def setup(self) :
         self.client -= Client()
         # client = 컴퓨터 / 컴퓨터에서 테스트해서 날리면 -> goorm 에서 돌아간다
+        
+    # 네비게이션 바에 하이퍼링크 연결하기
+    def navbar_test(self, soup):
+        navbar = soup.nav
+        self.assertIn('Blog',navbar.text)
+        self.assertIn('About Me',navbar.text)
+        
+    # 내비게이션 바 Do it Django 버튼
+        logo_btn = navbar.find('a',text='Do It Django')
+        self.assertEqual(logo_btn.attrs['href'],'/')    # 대문 페이지이기 때문에 '/'
+        
+    # 내비게이션 바 Home 버튼
+        home_btn = navbar.find('a',text='Home')
+        self.assertEqual(home_btn.attrs['href'],'/')
     
+    # 내비게이션 바 blog 버튼
+        blog_btn = navbar.find('a',text='Blog')
+        self.assertEqual(blog_btn.attrs['href'],'/blog/')
+        
+    # 내비게이션 바 About me 버튼    
+        about_me_btn = navbar.find('a',text='About Me')
+        self.assertEqual(about_me_btn.attrs['href'],'/about_me/')
+        
+        
     def test_post_list(self) : # post_list 를 test 할 함수
         
         # 1.1 포스트 목록 페이지 가져오는지 확인
@@ -25,17 +48,18 @@ class TestView(TestCase) :
         # 현재 들어온 내용을 parser 로 나눠서 html 로 바꿔서 저장해주라
         self.assertEqual(soup.title.text, 'Blog')
         # title 의 text 가 Blog 와 같은가 ?
+        self.navbar_test(soup)
         
-        # 1.4 <Nav> Navbar 가 있는지 확인
-        navbar = soup.nav
-        # soup 에 nav 가 있나 ? 결과는 navbar 에 들어감
+        # # 1.4 <Nav> Navbar 가 있는지 확인
+        # navbar = soup.nav
+        # # soup 에 nav 가 있나 ? 결과는 navbar 에 들어감
         
-        # 1.5 Blog , AboutMe 라는 문구가 네비게이션 바에 있는가
-        self.assertIn('Blog', navbar.text )
-        # assertIn() : 안에 있니 ?
-        # Blog 라는 글자가 navbar 안에 있니 ? 
-        self.assertIn('About Me', navbar.text)
-        # About Me 라는 글자가 navbar 안에 있니 ?
+        # # 1.5 Blog , AboutMe 라는 문구가 네비게이션 바에 있는가
+        # self.assertIn('Blog', navbar.text )
+        # # assertIn() : 안에 있니 ?
+        # # Blog 라는 글자가 navbar 안에 있니 ? 
+        # self.assertIn('About Me', navbar.text)
+        # # About Me 라는 글자가 navbar 안에 있니 ?
         
         # --------------------------------------------------------------------------------
         
@@ -104,9 +128,10 @@ class TestView(TestCase) :
         self.assertEqual(response.status_code, 200)
         
         # 2.2 포스트의 목록 페이지와 같은 navbar 가 붙어있는가
-        navbar = soup.nav
-        self.assertIn('Blog', navbar.text )
-        self.assertIn('About Me', navbar.text)
+        # navbar = soup.nav
+        # self.assertIn('Blog', navbar.text )
+        # self.assertIn('About Me', navbar.text)
+        self.navbar_test(soup)
         
         # 2.3 첫번째 포스트의 제목이 웹브라우저 탭 타이틀에 들어있는가
         self.assertIn(post_001.title, soup.title.text)
