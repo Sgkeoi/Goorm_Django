@@ -84,8 +84,9 @@
 
     <div class="container my-3">
         <div class="row">
-            <div class="col-md-8 col-lg-9">
+            <div class="col-md-8 col-lg-9" id='main-area'>
                 <h1>Blog</h1>
+            {% if post_list.exists %}
 
                 <!-- 블로그 게시물 -->
                 {% for p in post_list %}
@@ -120,6 +121,11 @@
                     </div>
                 </div>
                 {% endfor %}
+                
+                <!-- 게시물이 없는 경우 -->
+                {% else %}
+                    <h3>아직 게시물이 없습니다</h3>
+                {% endif %}
 
                 <!-- Pagination -->
                 <ul class="pagination justify-content-center mb-4">
