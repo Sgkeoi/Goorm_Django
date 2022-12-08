@@ -1,70 +1,13 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="ko">
+{% extends 'blog/base.html' %}
+{% block head_title %}
+    {{ post.title }} - Blog
+{% endblock %}
 
-<head>
-
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-
-  <title>{{ post.title }} - Blog</title>
-
-  <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="{% static 'blog/bootstrap/bootstrap.min.css' %}" media="screen">
-
-  <!-- Custom styles for this template -->
-  <link rel="stylesheet" href="{% static 'blog/css/blog-post.css' %}" media="screen">
-
-  <!-- FontAwesome 스크립트 받아오기-->
-    <script src="https://kit.fontawesome.com/fa35695fe7.js" crossorigin="anonymous"></script>
-    
-</head>
-
-<body>
-
-  <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container">
-      <a class="navbar-brand" href="#">Start Bootstrap</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home
-              <span class="sr-only">(current)</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Services</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Contact</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Page Content -->
-  <div class="container">
-
-    <div class="row">
-
-      <!-- Post Content Column -->
-      <div class="col-lg-8">
-
+    {% block main_area %}
+    <div id='post-area'>
         <!-- Title -->
         <h1 class="mt-4">{{ post.title }}</h1>
         <h5 class="text-muted">{{ post.hook_text }}</h5>
-          <!-- 상세 페이지에도 요약글 쓰게 하기 -->
-
         <!-- Author -->
         <p class="lead">
           by
@@ -74,47 +17,32 @@
         <hr>
 
         <!-- Date/Time -->
-        <p>Posted on {{ post.created_at }}</p>
+        <p>Posted on {{ post.create_at }}</p>
 
         <hr>
 
         <!-- Preview Image -->
-            {% if post.head_image %}
-            <!-- p에 head_image가 있으면 아래 구문 실행 없으면 alert 실행-->
-                <img class="img-fluid" src="{{ post.head_image.url }}" alt="{{ post }} head image">
-                <!-- 이미지가 없으면 Lorem Picsum 사이트 랜덤 이미지로 연결하기 -->
-            {% else %}
-                <img class="img-fluid" src="https://picsum.photos/seed/{{ post.id }}/800/200" alt="random_image">
-                                                                    <!-- seed : 고정, {{p.id}} : 그림 바꾸기 -->                  
-            {% endif %}
+        {% if post.head_image  %}
+            <!-- p.head_image 가 있으면 아래 구문을 실행하자 없으면 alter 걸어주기 --> 
+            <img class="img-fluid" src="{{ post.head_image.url }}" alt="{{ post }} head image">
+        {% else %} <!-- 사진이 없어도 class 에 잘 이동해야 하니까 class 넣어주기 -->
+            <img class="img-fluid" src="https://picsum.photos/seed/{{ post.id }}/800/200" alt="random_image">
+            <!-- 이미지를 고정하고 싶어서 /seed/ 를 넣어줬다 , p.id 로 id 마다 다른 이미지를 고정될 수 있게 했다 -->
+        {% endif %}
 
         <hr>
 
         <!-- Post Content -->
         <p>{{ post.content }}</p>
-          
           {% if post.file_upload %}
-          <a href="{{post.file_upload.url}}" class="fa-solid fa-download" role="button" download>Download</a>
-          <!-- Font Awesome 버튼 붙이는 방법 : class에 원하는 버튼 복사하면 된다.-->
-          
-              <!-- 다른 확장자 파일 저장하게 하는 방법(여기서는 csv파일) -->
-              <!-- 확장자 파일의 종류는 엄청 많다. -->
-              {% if post.get_file_ext == 'csv' %}  
-                  <i class = "fas fa-file-csv"></i>
-              {% elif post.get_file_ext == 'xlsx' or post.get_file_ext == 'xls' %}
-                  <i class = "fas fa-file-excel"></i>
-              {% elif post.get_file_ext == 'docx' or post.get_file_ext == 'doc' %}
-                  <i class = "fas fa-file-word"></i>
-              {% else %}
-                  <i class = "fas fa-file"></i>
-              {% endif %}
-              {{ post.get_file_name }}
-          
+          <!-- <a href = "{{ post.file_upload.url }}" class ="btn btn-outline-info" role = "button" download>Download</a> -->
+          <a href = "{{ post.file_upload.url }}" class ="fa-solid fa-circle-down" role = "button" download>Download</a>
           {% endif %}
-        
-        <hr>
-
           
+        <hr>
+    </div>
+    
+    <div id='comment-area'>
         <!-- Comments Form -->
         <div class="card my-4">
           <h5 class="card-header">Leave a Comment:</h5>
@@ -136,6 +64,7 @@
             Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
           </div>
         </div>
+
 
         <!-- Comment with nested comments -->
         <div class="media mb-4">
@@ -162,96 +91,5 @@
 
           </div>
         </div>
-
-      </div>
-
-      <!-- Sidebar Widgets Column -->
-      <div class="col-md-4">
-
-        <!-- Search Widget -->
-        <div class="card my-4">
-          <h5 class="card-header">Search</h5>
-          <div class="card-body">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Search for...">
-              <span class="input-group-append">
-                <button class="btn btn-secondary" type="button">Go!</button>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Categories Widget -->
-        <div class="card my-4">
-          <h5 class="card-header">Categories</h5>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-lg-6">
-                <ul class="list-unstyled mb-0">
-                  <li>
-                    <a href="#">Web Design</a>
-                  </li>
-                  <li>
-                    <a href="#">HTML</a>
-                  </li>
-                  <li>
-                    <a href="#">Freebies</a>
-                  </li>
-                </ul>
-              </div>
-              <div class="col-lg-6">
-                <ul class="list-unstyled mb-0">
-                  <li>
-                    <a href="#">JavaScript</a>
-                  </li>
-                  <li>
-                    <a href="#">CSS</a>
-                  </li>
-                  <li>
-                    <a href="#">Tutorials</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Side Widget -->
-        <div class="card my-4">
-          <h5 class="card-header">Side Widget</h5>
-          <div class="card-body">
-            You can put anything you want inside of these side widgets. They are easy to use, and feature the new Bootstrap 4 card containers!
-          </div>
-        </div>
-
-      </div>
-
     </div>
-    <!-- /.row -->
-
-  </div>
-  <!-- /.container -->
-
-  <!-- Footer -->
-  <footer class="py-5 bg-dark">
-    <div class="container">
-      <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
-    </div>
-    <!-- /.container -->
-  </footer>
-
-  <!-- Bootstrap core JavaScript -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
-
-
-</body>
-
-</html>
+    {% endblock %}
