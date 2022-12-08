@@ -20,9 +20,10 @@ class Post(models.Model):
     create_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     # on_delete: 연결되어 있던 User가 삭제될 때
     # ForeignKey: 다대일 관계를 정의
+    # SET_NULL : 글은 남아있게 하는데 작성자 이름은 NULL
     
     def __str__(self):
         return f'[{self.pk}]{self.title}::{self.author}'
