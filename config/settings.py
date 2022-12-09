@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 
+# 다운 받은 어플 등록하는 곳
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'blog',
     'single_pages',
 ]

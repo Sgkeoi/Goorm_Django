@@ -6,7 +6,7 @@
                 {% for p in post_list %}
                 
                 <!-- Blog Post -->
-                <div class="card mb-4">
+                <div class="card mb-4" id="post-{{p.pk}}">
                     {% if p.head_image  %}
                         <!-- p.head_image 가 있으면 아래 구문을 실행하자 없으면 alter 걸어주기 --> 
                         <img class="card-img-top" src="{{ p.head_image.url }}" alt="{{ p }} head image">
@@ -15,6 +15,13 @@
                         <!-- 이미지를 고정하고 싶어서 /seed/ 를 넣어줬다 , p.id 로 id 마다 다른 이미지를 고정될 수 있게 했다 -->
                     {% endif %}
                     <div class="card-body">
+                        {% if p.category %} <!-- 카테고리가 있으면 출력 -->
+                        <span class="badge badge-info float-right">{{p.category}}</span>
+                        {% else %}
+                        <span class="badge badge-info float-right">미분류</span>
+                        {% endif %}
+                        
+                        <!-- float-right : 오른쪽 끝에 위치시키기 -->
                         <h2 class="card-title">{{ p.title }}</h2><!-- 포스트 제목 -->
                         {% if p.hook_text %}<!-- 있으면 출력하고 없으면 안 하게 if 걸어줬다 -->
                             <h5 class="text-muted">{{ p.hook_text }}</h5>
@@ -29,6 +36,7 @@
                         <a href="#">{{ p.author | upper }}</a>
                         <!-- upper : 전부 대문자로 처리함 -->
                     </div>
+                    <!-- <a href="{{ p.category.name }}">{{ p.category.name }}</a> -->
                 </div>
                 {% endfor %} <!-- for 문 끝낼거니까 endfor 명령 주기 --> 
                 {% else %}

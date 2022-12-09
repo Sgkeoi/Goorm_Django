@@ -5,6 +5,13 @@
 
     {% block main_area %}
     <div id='post-area'>
+        
+        {% if post.category %} <!-- 카테고리가 있으면 출력 -->
+            <span class="badge badge-info float-right">{{post.category}}</span>
+        {% else %}
+            <span class="badge badge-info float-right">미분류</span>
+        {% endif %}
+        
         <!-- Title -->
         <h1 class="mt-4">{{ post.title }}</h1>
         <h5 class="text-muted">{{ post.hook_text }}</h5>
