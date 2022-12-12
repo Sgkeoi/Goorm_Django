@@ -13,7 +13,7 @@ class PostList(ListView):
     
     # None인 category가 몇 개가 있는가?
     def get_context_data(self, **kwargs):
-        context = super(PostList,self).get_context_data()
+        context = super(PostList, self).get_context_data()
         context['categories'] = Category.objects.all()
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
         return context
