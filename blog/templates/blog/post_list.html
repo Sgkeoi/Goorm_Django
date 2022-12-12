@@ -1,7 +1,10 @@
 {% extends 'blog/base.html' %}<!-- blog/base.html 가져오기 -->
     {% block main_area %}
 
-                <h1>Blog</h1>
+                <h1>Blog {% if category %} <!-- 카테고리가 있으면 -->
+                        <span class="badge badge-info">{{ category }}</span>  <!-- badge 생성 -->
+                        {% endif %}
+                </h1>
                 {% if post_list.exists %} <!-- post_list 에 게시물이 있다면 if 문에 진입 --> 
                 {% for p in post_list %}
                 

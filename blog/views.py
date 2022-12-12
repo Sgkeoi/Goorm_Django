@@ -26,7 +26,8 @@ class PostDetail(DetailView):
         context['categories'] = Category.objects.all()
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
         return context
-    
+
+# path('category/<str:slug>/',views.category_page),에서 옴
 def category_page(request, slug):
     if slug == 'no_category':
         category = "미분류"    # 카테고리가 없으면 미분류
@@ -39,12 +40,13 @@ def category_page(request, slug):
         request,
         'blog/post_list.html',
         {
-            'post_list':post_list,
-            'categories':Category.objects.all(),
-            'no_category_post_count':Post.objects.filter(category=None).count(),
-            'category':category,
+            'post_list':post_list,    
+            'categories':Category.objects.all(), # 카드를 채워준다.
+            'no_category_post_count':Post.objects.filter(category=None).count(), # 미분류, 미분류 개수 알려줌  
+            'category': category, # 제목 옆에 카테고리 이름이 붙는다.
         }
     )
+    # category=category : category로 필터링 한 것만 가지고 온다.
 
 # from django.shortcuts import render
 # from .models import Post

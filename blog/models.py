@@ -20,6 +20,7 @@ class Category(models.Model):
     def __str__(self):
         return self.name
     
+    # 주소를 받음
     def get_absolute_url(self):
         return f'/blog/category/{self.slug}/'
     
