@@ -4,6 +4,10 @@
                 <h1>Blog {% if category %} <!-- 카테고리가 있으면 -->
                         <span class="badge badge-info">{{ category }}</span>  <!-- badge 생성 -->
                         {% endif %}
+                    {% if tag %}  <!-- tag가 있는가 -->
+                        <span class="badge badge-info">{{ tag }}({{ tag.post_set.count }})</span>
+                    <!-- ({{ tag.post_set.count }}) 해당 태그가 걸린 포스트의 갯수-->
+                    {% endif %}
                 </h1>
                 {% if post_list.exists %} <!-- post_list 에 게시물이 있다면 if 문에 진입 --> 
                 {% for p in post_list %}

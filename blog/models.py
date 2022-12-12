@@ -39,7 +39,7 @@ class Tag(models.Model):
     
     # 주소를 받음
     def get_absolute_url(self):
-        return f'/blog/category/{self.slug}/'
+        return f'/blog/tag/{self.slug}/'
 
 class Post(models.Model):
     title = models.CharField(max_length=30)

@@ -4,6 +4,7 @@ from . import views
 
 # 경로 urls.py -> index.py
 urlpatterns = [
+    path('tag/<str:slug>/',views.tag_page),
     path('<int:pk>/',views.PostDetail.as_view()),
     # path('<int:pk>/',views.single_post_page), 사용 안 함(PostDetail로 변경되었음)
     
