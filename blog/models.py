@@ -28,6 +28,19 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = 'Categories'
 
+# 태그
+class Tag(models.Model):
+    name = models.CharField(max_length=50)    
+    slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
+    
+    # 출력
+    def __str__(self):
+        return self.name
+    
+    # 주소를 받음
+    def get_absolute_url(self):
+        return f'/blog/category/{self.slug}/'
+
 class Post(models.Model):
     title = models.CharField(max_length=30)
     hook_text = models.CharField(max_length=100, blank=True)
@@ -51,6 +64,10 @@ class Post(models.Model):
     # ForeignKey : 일대다 관계, null=True : 빈 글 허용(분류를 선택 안해도 될 수 있도록)
     # on_delete=models.SET_NULL : 해당 카테고리가 삭제되어도 포스트는 유지시킬 것이다
     # blank=True : 입력이 공백이어도 된다.
+    
+    # 태그 category
+    # ManyToManyField : 다대다
+    tags = models.ManyToManyField(Tag, blank=True)
     
     def __str__(self):
         return f'[{self.pk}]{self.title}::{self.author}'

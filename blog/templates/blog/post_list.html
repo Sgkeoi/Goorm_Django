@@ -31,6 +31,18 @@
                         {% endif %}
                         <p class="card-text">{{ p.content | truncatewords:45 }}</p> <!-- 포스트 내용 -->
                         <!-- 포스트 리스트에 내용이 다 나올 필요는 없으니까 truncate 로 단어 45개만 남기고 지우기 -->
+                        
+                        <!-- 태그가 존재한다면 -->
+                        {% if p.tags.exists %}
+                            <i class="fas fa-tags"></i>
+                                {% for tag in p.tags.iterator %}
+                                    <a href="{{ tag.get_absolute_url }}"><span class="badge badge-pill badge-light">
+                                        {{ tag }}</span></a>
+                                {% endfor %}
+                            <br>
+                            <br>
+                        {% endif %}
+                        
                         <a href="{{ p.get_absolute_url }}" class="btn btn-primary">Read More &rarr;</a>
                     </div>
                     <div class="card-footer text-muted">
