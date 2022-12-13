@@ -1,0 +1,45 @@
+<!-- 공통된 부분만 놔둘 파일 ( header / footer / sidebar 등 ) -->
+
+<!DOCTYPE html>
+{% load static %}
+<!-- 가져온 내 파일 사용할거니까 load --> 
+<html>
+
+<head>
+    <title>{% block head_title %}Blog{% endblock %}</title>
+    <!-- {% static 불러올 주소 %} --> 
+    <link rel="stylesheet" href="{% static 'blog/bootstrap/bootstrap.min.css' %}"
+          media = "screen">    
+    <!-- <script src="https://kit.fontawesome.com/726bbd6862.js" crossorigin="anonymous"></script> -->
+    <!-- 코드는 가입해서 받아와서 써야한당(코드 본인 것 아님) --> 
+</head>
+
+<body>
+
+{% include 'blog/navbar.html' %}
+    
+    <div class="container my-3">
+        <div class="row">
+            <div class="col-12" id="main-area">
+            <!-- div id="main-area" 의 자리만 놔두고 내용은 다 지웠다 -->
+                {% block main_area %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+{% include 'blog/footer.html' %}
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>

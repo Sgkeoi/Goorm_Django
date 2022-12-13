@@ -132,3 +132,5 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'_media')
 # 기본 주소에 Blog와 상세 페이지를 연결해주는 역할을 한다.
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# 경고메세지 지우기

@@ -186,3 +186,34 @@ class TestView(TestCase):
         self.assertIn(self.post_001.title, main_area.text)
         self.assertNotIn(self.post_002.title, main_area.text)
         self.assertNotIn(self.post_003.title, main_area.text)
+        
+    def test_create_post(self):
+        response = self.client.get('/blog/create_post')
+        self.assertNotEqual(response.status_code, 200)
+        
+        # 로그인
+        self.client.login(username='trump', password='somepassword')
+        
+        response = self.client.get('/blog/create_post/')
+        # '/blog/create_post/'가 들어오면 이 작업을 수행하겠다.
+        self.assertEqual(response.status_code,200)
+        soup = BeautifulSoup(response.content,'html.parser')
+        
+        self.assertEqual('Create Post - Blog', soup.title.text)
+        main_area = soup.find('div', id='main-area')
+        self.assertIn('Create New Post', main_area.text)
+        
+        # submit 입력했을 때
+        self.client.post(
+            '/blog/create_post/',
+            {
+                'title': 'Post Form 만들기',
+                'content': 'Post Form 페이지 만들기',
+            }
+        )
+        
+        last_post = Post.objects.last()
+        self.assertEqual(last_post.title,"Post Form 만들기")
+        self.assertEqual(last_post.author.username, 'trump')
+        # 마지막 게시물의 작성자가 trump가 맞는가?
+        

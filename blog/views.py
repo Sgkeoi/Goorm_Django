@@ -1,8 +1,26 @@
 # CBV 방식으로 변경하기
 # from django.shortcuts import render
-from django.views.generic import ListView, DetailView    # Detail을 불러오겠음
+from django.views.generic import ListView, DetailView, CreateView    # Detail을 불러오겠음
+# django -> views -> generic 안의 CreateView를 불러오겠음.
+
+# 로그인 관련해서 django에서 지원해주는 라이브러리
+# 로그인되어있을때만 보여줌
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .models import Post, Category, Tag
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+
+class PostCreate(LoginRequiredMixin, CreateView):
+    model = Post # Post 모듈을 사용하겠음
+    fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category']
+    
+    def form_valid(self, form):
+        current_user = self.request.user
+        if current_user.is_authenticated:
+            form.instance.author = current_user
+            return super(PostCreate,self).form_valid(form)
+        else:
+            return redirect('/blog/')
 
 class PostList(ListView):
     model = Post
