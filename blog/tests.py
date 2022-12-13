@@ -9,6 +9,10 @@ class TestView(TestCase):
         self.client = Client()
         self.user_trump = User.objects.create_user(username='trump', password='somepassword')
         self.user_obama = User.objects.create_user(username='obama', password='somepassword')
+        
+        # username 'obama'를 스태프로 지정합니다.
+        self.user_obama.is_staff = True
+        self.user_obama.save()
 
         self.category_programming = Category.objects.create(name='programming', slug='programming')
         self.category_music = Category.objects.create(name='music', slug='music')
@@ -191,8 +195,14 @@ class TestView(TestCase):
         response = self.client.get('/blog/create_post')
         self.assertNotEqual(response.status_code, 200)
         
-        # 로그인
+        # 관리자 로그인
         self.client.login(username='trump', password='somepassword')
+        response = self.client.get('/blog/create_post')
+        self.assertNotEqual(response.status_code, 200)
+        
+        # 로그인
+        self.client.login(username='obama', password='somepassword')
+        # obama가 관리자이기 때문이다.
         
         response = self.client.get('/blog/create_post/')
         # '/blog/create_post/'가 들어오면 이 작업을 수행하겠다.
@@ -214,6 +224,6 @@ class TestView(TestCase):
         
         last_post = Post.objects.last()
         self.assertEqual(last_post.title,"Post Form 만들기")
-        self.assertEqual(last_post.author.username, 'trump')
+        self.assertEqual(last_post.author.username, 'obama')
         # 마지막 게시물의 작성자가 trump가 맞는가?
         

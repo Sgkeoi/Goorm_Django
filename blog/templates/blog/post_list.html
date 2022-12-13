@@ -1,6 +1,17 @@
 {% extends 'blog/base.html' %}<!-- blog/base.html 가져오기 -->
     {% block main_area %}
 
+    <!-- 로그인이 된 경우 -->
+    {% if user.is_authenticated %}
+        {% if user.is_superuser or user.is_staff %}
+        <!-- superuser이거나 staff인 경우 버튼이 나옴-->
+            <a class="btn btn-info btn-sm float-right" href="/blog/create_post/"
+                role="button"><i class="fas fa-pen"></i>New Post
+                <!-- &nbsp; : 줄바꿈 없는 공백 -->
+            </a>
+        {% endif %}
+    {% endif %}
+
                 <h1>Blog {% if category %} <!-- 카테고리가 있으면 -->
                         <span class="badge badge-info">{{ category }}</span>  <!-- badge 생성 -->
                         {% endif %}
