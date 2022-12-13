@@ -10,18 +10,15 @@ class TestView(TestCase):
         self.user_trump = User.objects.create_user(username='trump', password='somepassword')
         self.user_obama = User.objects.create_user(username='obama', password='somepassword')
         
-        # username 'obama'를 스태프로 지정합니다.
-        self.user_obama.is_staff = True
+        self.user_obama.is_staff = True # 오바마 계정은 스태프 권리를 가진다
         self.user_obama.save()
-
+        
         self.category_programming = Category.objects.create(name='programming', slug='programming')
         self.category_music = Category.objects.create(name='music', slug='music')
-        
-        # 태그 테스트하기
-        self.tag_baseball = Tag.objects.create(name='baseball', slug='baseball')
-        self.tag_python_kor = Tag.objects.create(name='공부', slug='공부')
-        self.tag_python = Tag.objects.create(name='python', slug='python')                                                       
 
+        self.tag_python_kor = Tag.objects.create(name="파이썬 공부", slug="파이썬-공부")
+        self.tag_python = Tag.objects.create(name="python", slug="python")
+        self.tag_hello = Tag.objects.create(name="hello", slug="hello")
         
         self.post_001 = Post.objects.create(
             title='첫번째 포스트입니다.',
@@ -29,24 +26,21 @@ class TestView(TestCase):
             category=self.category_programming,
             author=self.user_trump
         )
+        self.post_001.tags.add(self.tag_hello)
         
-        # 태그 테스트
-        self.post_001.tags.add(self.tag_baseball)
-
         self.post_002 = Post.objects.create(
             title='두번째 포스트입니다.',
             content='1등이 전부는 아니잖아요?',
             category=self.category_music,
             author=self.user_obama
         )
-
+        # post_002 에는 tag 안 달궁
+        
         self.post_003 = Post.objects.create(
             title='세번째 포스트입니다.',
             content='category가 없을 수도 있죠',
             author=self.user_obama
         )
-        
-        # 태그 테스트
         self.post_003.tags.add(self.tag_python_kor)
         self.post_003.tags.add(self.tag_python)
 
@@ -74,7 +68,7 @@ class TestView(TestCase):
             f'{self.category_music.name} ({self.category_music.post_set.count()})',
             categories_card.text
         )
-        self.assertIn(f'미분류(1)', categories_card.text)
+        self.assertIn(f'미분류 (1)', categories_card.text)
 
     def test_post_list(self):
         # Post가 있는 경우
@@ -96,32 +90,34 @@ class TestView(TestCase):
         self.assertIn(self.post_001.title, post_001_card.text)  # title이 있는지
         self.assertIn(self.post_001.category.name, post_001_card.text)  # category가 있는지
         self.assertIn(self.post_001.author.username.upper(), post_001_card.text)  # 작성자명이 있는지
-        
-        # 태그 테스트(post001)
-        self.assertIn(self.tag_baseball.name,post_001_card.text)  # post_001에 tag_baseball이 있는지
-        self.assertNotIn(self.tag_python_kor.name,post_001_card.text)  # post_001에 tag_python_kor이 없는지
-        self.assertNotIn(self.tag_python.name,post_001_card.text)
 
+        self.assertIn(self.tag_hello.name, post_001_card.text)
+        # 태그 hello 가 post_001 에 있니 ?
+        self.assertNotIn(self.tag_python.name, post_001_card.text)
+        self.assertNotIn(self.tag_python_kor.name, post_001_card.text)
+        # 위에서 001 에는 python, python_kor 은 안 넣어줬으니까 NotIn
+        
         post_002_card = main_area.find('div', id='post-2')
         self.assertIn(self.post_002.title, post_002_card.text)
         self.assertIn(self.post_002.category.name, post_002_card.text)
         self.assertIn(self.post_002.author.username.upper(), post_002_card.text)
-        
-        # 태그 테스트(post002)
-        self.assertNotIn(self.tag_baseball.name,post_002_card.text)  
-        self.assertNotIn(self.tag_python_kor.name,post_002_card.text)  
-        self.assertNotIn(self.tag_python.name,post_002_card.text)
 
+        self.assertNotIn(self.tag_hello.name, post_002_card.text)
+        self.assertNotIn(self.tag_python.name, post_002_card.text)
+        self.assertNotIn(self.tag_python_kor.name, post_002_card.text)
+        # 위에서 002 에는 아무 태그도 안 넣어줬으니까 NotIn
+        
         post_003_card = main_area.find('div', id='post-3')
         self.assertIn('미분류', post_003_card.text)
         self.assertIn(self.post_003.title, post_003_card.text)
         self.assertIn(self.post_003.author.username.upper(), post_003_card.text)
-        
-        # 태그 테스트(post003)
-        self.assertNotIn(self.tag_baseball.name,post_003_card.text)  
-        self.assertIn(self.tag_python_kor.name,post_003_card.text)  
-        self.assertIn(self.tag_python.name,post_003_card.text)
 
+        self.assertNotIn(self.tag_hello.name, post_003_card.text)
+        self.assertIn(self.tag_python_kor.name, post_003_card.text)
+        self.assertIn(self.tag_python.name, post_003_card.text)
+        # 003 에는 hello 는 안 넣고, python 과 python_kor 태그는 넣어줬으니까 요렇게 ! 
+
+        
         # Post가 없는 경우
         Post.objects.all().delete()
         self.assertEqual(Post.objects.count(), 0)
@@ -151,12 +147,6 @@ class TestView(TestCase):
         self.assertIn(self.user_trump.username.upper(), post_area.text)
         self.assertIn(self.post_001.content, post_area.text)
 
-    
-    
-    
-    
-    
-    
     def test_category_page(self):
         response = self.client.get(self.category_programming.get_absolute_url())
         self.assertEqual(response.status_code, 200)
@@ -165,65 +155,138 @@ class TestView(TestCase):
         self.navbar_test(soup)
         self.category_card_test(soup)
 
-        
-
         main_area = soup.find('div', id='main-area')
         self.assertIn(self.category_programming.name, main_area.text)
         self.assertIn(self.post_001.title, main_area.text)
         self.assertNotIn(self.post_002.title, main_area.text)
         self.assertNotIn(self.post_003.title, main_area.text)
-     
-    # 태그 페이지 테스트
-    def test_tag_page(self):
-        response = self.client.get(self.tag_baseball.get_absolute_url())
+        
+    def test_tag_page(self) :
+        response = self.client.get(self.tag_hello.get_absolute_url())
         self.assertEqual(response.status_code, 200)
         soup = BeautifulSoup(response.content, 'html.parser')
 
         self.navbar_test(soup)
         self.category_card_test(soup)
-
-        self.assertIn(self.tag_baseball.name,soup.h1.text)
+        
+        self.assertIn(self.tag_hello.name, soup.h1.text)
 
         main_area = soup.find('div', id='main-area')
-        self.assertIn(self.tag_baseball.name, main_area.text)
+        self.assertIn(self.tag_hello.name, main_area.text)
         
         self.assertIn(self.post_001.title, main_area.text)
         self.assertNotIn(self.post_002.title, main_area.text)
         self.assertNotIn(self.post_003.title, main_area.text)
         
-    def test_create_post(self):
+    def test_create_post(self) :
+        
+        # 로그인이 안 된 상태
         response = self.client.get('/blog/create_post')
         self.assertNotEqual(response.status_code, 200)
+        # 로그인이 안 된 상태니까 200이 뜨면 안 된다
         
-        # 관리자 로그인
+        # trump 로그인하기
         self.client.login(username='trump', password='somepassword')
         response = self.client.get('/blog/create_post')
+        # trump 계정이 로그인해서 create_post 로 들어갔다
         self.assertNotEqual(response.status_code, 200)
+        # 얘는 권한이 없으니까 200 뜨면 안 된당        
         
-        # 로그인
+        # obama 로그인 하기 - obama 는 관리자 계정
         self.client.login(username='obama', password='somepassword')
-        # obama가 관리자이기 때문이다.
         
+        # 로그인이 된 상태
         response = self.client.get('/blog/create_post/')
-        # '/blog/create_post/'가 들어오면 이 작업을 수행하겠다.
-        self.assertEqual(response.status_code,200)
-        soup = BeautifulSoup(response.content,'html.parser')
+        # 가상의 사용자 client 가 주소창에 /blog/create_post/ 라고 치고 들어오면
         
-        self.assertEqual('Create Post - Blog', soup.title.text)
+        self.assertEqual(response.status_code, 200)
+        # 제대로 들어왔다면 200 이 뜬다
+        
+        soup = BeautifulSoup(response.content, 'html.parser')
+        # 들어온 내용 중 html 을 찾아서 soup 에 넣어주기
+        
+        self.assertEqual('Create Post - Blog', soup.title.text )
+        # 페이지에 들어가있는 내용 확인 ( 페이지로 잘 들어갔는지 확인할 수 있다 )
+        
         main_area = soup.find('div', id='main-area')
-        self.assertIn('Create New Post', main_area.text)
+        # div 중 id 가 main-area 인 것을 찾아서 main_area 변수에 넣기
         
-        # submit 입력했을 때
-        self.client.post(
+        self.assertIn('Create New Post', main_area.text)
+        # Create new Post 가 main_area 에 있는지 확인
+        
+        self.client.post( # submit 눌렀을 때의 페이지 테스트
             '/blog/create_post/',
             {
-                'title': 'Post Form 만들기',
-                'content': 'Post Form 페이지 만들기',
+                'title' : 'Post Form 만들기',
+                'content' : 'Post Form 페이지를 만듭시다.',
             }
         )
+        # test 서버 안에 만든 게시물
         
         last_post = Post.objects.last()
-        self.assertEqual(last_post.title,"Post Form 만들기")
-        self.assertEqual(last_post.author.username, 'obama')
-        # 마지막 게시물의 작성자가 trump가 맞는가?
+        # 가장 최근의 게시글
         
+        self.assertEqual(last_post.title, "Post Form 만들기")
+        # 만든 게시물 확인
+        
+        self.assertEqual(last_post.author.username, 'obama')
+        # 마지막 게시물을 작성한 사람이 obama 가 맞니
+        
+    def test_update_post(self) :
+        update_post_url = f'/blog/update_post/{self.post_003.pk}/'
+        # test 안에서 만든 003번째 pk ( 아마도 3 ) 을 넣어 불러오기
+        
+        # 아직 로그인을 안 했음
+        response = self.client.get(update_post_url)
+        # 로그인이 안 된 경우니까 200 이 뜨면 안 된다
+        self.assertNotEqual(response.status_code, 200)
+        
+        # 로그인을 했지만 작성자가 아닌 경우
+        self.assertNotEqual(self.post_003.author, self.user_trump)
+        # 3번을 작성한 작성자는 obama임 -> trump 가 작성한 게 아니니까 NotEqual 맞음
+        
+        self.client.login(
+            username = self.user_trump.username,
+            password = 'somepassword'
+        )
+        
+        response = self.client.get(update_post_url)
+        self.assertEqual(response.status_code, 403)
+        # 403 : 권한 없음 코드
+        # trump 가 작성한 게시물이 아니라서 403 코드가 나온다
+        
+        
+        # 작성자 본인이 로그인 한 경우
+        response = self.client.get(update_post_url)
+        self.assertEqual(response.status_code, 403)
+
+        self.client.login(
+            username = self.post_003.author.username,
+            password = 'somepassword'
+        )
+        response = self.client.get(update_post_url)
+        self.assertEqual(response.status_code, 200)
+        # 이제 작성자 본인이 들어왔으니까 200 코드가 뜬당
+        
+        soup = BeautifulSoup(response.content, 'html.parser')
+        
+        self.assertEqual('Edit Post - Blog', soup.title.text)
+        main_area = soup.find('div', id='main-area')
+        self.assertIn('Edit Post', main_area.text)
+        
+        # 컨텐츠 삽입
+        response = self.client.get(
+            update_post_url,
+            {
+                'title' : '세번째 포스트를 수정했습니다.' ,
+                'content' : '안녕 세계! 우리는 하나?' ,
+                'category' : self.category_music.pk
+            },
+            follow = True
+        )
+        
+        soup = BeautifulSoup(response.content, 'html.parser')
+        main_area = soup.find('div', id='main-area')
+        self.assertIn('세번째 포스트를 수정했습니다.', main_area.text )
+        self.assertIn('안녕 세계! 우리는 하나?', main_area.text)
+        self.assertIn(self.category_music.name, main_area.text)

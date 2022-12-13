@@ -1,6 +1,6 @@
 # CBV 방식으로 변경하기
 # from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView    # Detail을 불러오겠음
+from django.views.generic import ListView, DetailView, CreateView, UpdateView    # Detail을 불러오겠음
 # django -> views -> generic 안의 CreateView를 불러오겠음.
 
 # 로그인 관련해서 django에서 지원해주는 라이브러리
@@ -10,6 +10,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from .models import Post, Category, Tag
 from django.shortcuts import render, redirect
+
+class PostUpdate(LoginRequiredMixin, UpdateView):
+    model = Post
+    fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category', 'tags']
 
 class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Post # Post 모듈을 사용하겠음
