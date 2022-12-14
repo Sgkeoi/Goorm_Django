@@ -44,7 +44,7 @@
                         {% if p.hook_text %}<!-- 있으면 출력하고 없으면 안 하게 if 걸어줬다 -->
                             <h5 class="text-muted">{{ p.hook_text }}</h5>
                         {% endif %}
-                        <p class="card-text">{{ p.content | truncatewords:45 }}</p> <!-- 포스트 내용 -->
+                        <p class="card-text">{{ p.get_content_markdown | truncatewords_html:45 | safe }}</p> <!-- 포스트 내용 -->
                         <!-- 포스트 리스트에 내용이 다 나올 필요는 없으니까 truncate 로 단어 45개만 남기고 지우기 -->
                         
                         <!-- 태그가 존재한다면 -->

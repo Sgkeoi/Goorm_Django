@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from markdownx.models import MarkdownxField
+from markdownx.utils import markdown
 import os
 
 # DB 연동
@@ -44,7 +46,7 @@ class Tag(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=30)
     hook_text = models.CharField(max_length=100, blank=True)
-    content = models.TextField()
+    content = MarkdownxField()
     
     head_image = models.ImageField(upload_to='blog/images/%Y/%m/%d', blank=True)
     # 연도 폴더 만들고, 월/일 디렉토리를 만든다.
@@ -82,6 +84,10 @@ class Post(models.Model):
     # 확장자 받아오기
     def get_file_exit(self):
         return self.get_file_name().split('.')[-1]
+    
+    # 마크다운
+    def get_content_markdown(self):
+        return markdown(self.content)
     
     
 # author : 추후에 작성하겠습니다(12.08에 일부분 작성했습니다.)
