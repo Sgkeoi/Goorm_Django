@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'crispy_forms',
     'blog',
     'single_pages',
 ]
@@ -134,3 +135,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'_media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # 경고메세지 지우기
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

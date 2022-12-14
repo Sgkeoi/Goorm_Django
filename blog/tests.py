@@ -214,11 +214,16 @@ class TestView(TestCase):
         self.assertIn('Create New Post', main_area.text)
         # Create new Post 가 main_area 에 있는지 확인
         
+        # 태그 입력 테스트
+        tag_str_input = main_area.find('input', id='id_tags_str')
+        self.assertTrue(tag_str_input)
+        
         self.client.post( # submit 눌렀을 때의 페이지 테스트
             '/blog/create_post/',
             {
                 'title' : 'Post Form 만들기',
                 'content' : 'Post Form 페이지를 만듭시다.',
+                'tags_str' : 'new tag; 한글 태그, python'
             }
         )
         # test 서버 안에 만든 게시물
@@ -231,6 +236,15 @@ class TestView(TestCase):
         
         self.assertEqual(last_post.author.username, 'obama')
         # 마지막 게시물을 작성한 사람이 obama 가 맞니
+        
+        self.assertEqual(last_post.tags.count(),3)
+        # 태그가 3개 있는가
+        
+        self.assertTrue(Tag.objects.get(name='new tag'))
+        # 'new tag'가 있는가
+        
+        self.assertTrue(Tag.objects.get(name='한글 태그'))
+        # '한글 태그'가 있는가
         
     def test_update_post(self) :
         update_post_url = f'/blog/update_post/{self.post_003.pk}/'
