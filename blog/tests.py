@@ -68,7 +68,7 @@ class TestView(TestCase):
             f'{self.category_music.name} ({self.category_music.post_set.count()})',
             categories_card.text
         )
-        self.assertIn(f'미분류 (1)', categories_card.text)
+        self.assertIn(f'미분류(1)', categories_card.text)
 
     def test_post_list(self):
         # Post가 있는 경우
@@ -275,7 +275,7 @@ class TestView(TestCase):
         self.assertIn('Edit Post', main_area.text)
         
         # 컨텐츠 삽입
-        response = self.client.get(
+        response = self.client.post(
             update_post_url,
             {
                 'title' : '세번째 포스트를 수정했습니다.' ,

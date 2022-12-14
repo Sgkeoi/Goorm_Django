@@ -1,0 +1,22 @@
+{% extends 'blog/base_full_width.html' %}
+
+{% block head_title %}Edit Post - Blog{% endblock %}
+
+{% block main_area %}
+    <h1>Edit Post</h1>
+    <hr>
+    <!-- Create New Post 글씨 입력 -->
+
+    <form method='post' enctype="multipart/form-data"> {% csrf_token %}
+    <!-- enctype : 폼에서 파일 전송을 할 때 -->
+    <!-- csrf : 웹사이트 공격 CSRF는 Cross-site request forgery 공격의 약자로, 사용자가 자기 의지와 무관하게 공격자가 의도한 행위를 특정 웹사이트에 요청하게 하는 방식의 공격이다.
+    Django는 해당 공격을 방지하기 위해 CSRF 토큰이라는 난수 비슷한 것을 도입했다. -->
+        <table>
+            {{ form }}
+        </table>
+        <!-- submit용 버튼 -->
+        <button type="submit" class="btn btn-info float-right"> <!-- float-right : 오른쪽 정렬 -->
+            Submit
+        </button>
+    </form>
+{% endblock %}
