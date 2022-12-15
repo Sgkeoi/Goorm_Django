@@ -42,6 +42,12 @@ INSTALLED_APPS = [
     'django_extensions',
     'crispy_forms',
     'markdownx',
+    'allauth',    
+    'allauth.account',
+    'allauth.socialaccount',
+    # allauth, allauth.account, allauthor.socialaccount : django 기본 로그인
+    'allauth.socialaccount.providers.google',
+    # allauth.socialaccount.providers.google : 구글 로그인
     'blog',
     'single_pages',
 ]
@@ -138,3 +144,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # 경고메세지 지우기
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+# 블로그 사이트 ID는 1개만 허용
+SITE_ID = 1
+
+# 이메일을 반드시 받겠다는 설정임
+ACCOUNT_EMAIL_REQUIRED = True
+
+# 이메일을 검증한다.
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+LOGIN_REDIRECT_URL = '/blog/'
+
+ACCOUNT_DEFAULT_HTTP_PROTOCOL='https'
