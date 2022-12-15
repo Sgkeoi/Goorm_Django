@@ -89,6 +89,19 @@ class Post(models.Model):
     def get_content_markdown(self):
         return markdown(self.content)
     
+# 댓글
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)  # on_delete : 회원탈퇴를 하면 댓글을 삭제시킬 것임
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    create_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)  # 본인 댓글 수정 시간
+    
+    def __str__(self):
+        return f'{self.author}::{self.content}'
+    
+    def get_absolute_url(self):
+        return f'{ self.post.get_absolute_url() }#comment-{self.pk}'
     
 # author : 추후에 작성하겠습니다(12.08에 일부분 작성했습니다.)
 # Create your models here.

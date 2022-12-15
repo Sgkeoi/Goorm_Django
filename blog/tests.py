@@ -1,8 +1,9 @@
 from django.test import TestCase, Client
 from bs4 import BeautifulSoup
 from django.contrib.auth.models import User
-from .models import Post, Category, Tag
+from .models import Post, Category, Tag, Comment
 
+# ---------------------------------------------------------------------------------------------------------------
 
 class TestView(TestCase):
     def setUp(self):
@@ -34,7 +35,7 @@ class TestView(TestCase):
             category=self.category_music,
             author=self.user_obama
         )
-        # post_002 에는 tag 안 달궁
+        # post_002 에는 tag 추가 안함
         
         self.post_003 = Post.objects.create(
             title='세번째 포스트입니다.',
@@ -43,6 +44,14 @@ class TestView(TestCase):
         )
         self.post_003.tags.add(self.tag_python_kor)
         self.post_003.tags.add(self.tag_python)
+        
+        # 댓글
+        self.comment_001 = Comment.objects.create(
+            post = self.post_001,
+            author = self.user_obama,
+            content = '첫 번째 댓글'
+        )
+        # 댓글은 post_detail.html에 달린다.
 
     def navbar_test(self, soup):
         navbar = soup.nav
@@ -146,6 +155,13 @@ class TestView(TestCase):
 
         self.assertIn(self.user_trump.username.upper(), post_area.text)
         self.assertIn(self.post_001.content, post_area.text)
+        
+        # comment area
+        comments_area = soup.find('div', id='comment-area')
+        comment_001_area = comments_area.find('div', id='comment-1')
+        self.assertIn(self.comment_001.author.username, comment_001_area.text)
+        self.assertIn(self.comment_001.content, comment_001_area.text)
+        
 
     def test_category_page(self):
         response = self.client.get(self.category_programming.get_absolute_url())
