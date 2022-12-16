@@ -1,4 +1,5 @@
 {% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
 {% block head_title %}
     {{ post.title }} - Blog
 {% endblock %}
@@ -75,12 +76,21 @@
         <div class="card my-4">
           <h5 class="card-header">Leave a Comment:</h5>
           <div class="card-body">
-            <form>
+              
+            {% if user.is_authenticated %}  <!-- 로그인이 된 상태 -->        
+            <form id="comment-form" method="Post"
+                  action="{{ post.get_absolute_url }}new_comment/">
+                {% csrf_token %}
               <div class="form-group">
-                <textarea class="form-control" rows="3"></textarea>
+                {{ comment_form | crispy }}
               </div>
               <button type="submit" class="btn btn-primary">Submit</button>
             </form>
+            {% else %}  <!-- 로그인이 안 된 상태 -->
+                <a role="button" class="btn btn-outline-dark btn-block btn-sm " href="#"
+                   data-toggle="modal" data-target="#loginModal">
+                Log in and Leave a Comment</a> 
+            {% endif %}
           </div>
         </div>
 

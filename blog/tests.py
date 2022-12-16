@@ -320,3 +320,58 @@ class TestView(TestCase):
         self.assertIn('세번째 포스트를 수정했습니다.', main_area.text )
         self.assertIn('안녕 세계! 우리는 하나?', main_area.text)
         self.assertIn(self.category_music.name, main_area.text)
+        
+    def test_comment_form(self):
+        self.assertEqual(Comment.objects.count(),1)
+        # 댓글이 1개 있는가?
+        
+        self.assertEqual(self.post_001.comment_set.count(),1)
+        # post_001에 댓글이 1개 있는가?
+        
+        # 로그인을 하지 않은 상태
+        response = self.client.get(self.post_001.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content,'html.parser')
+        
+        comment_area = soup.find('div', id='comment-area')
+        self.assertIn('Log in and Leave a Comment', comment_area.text)
+        self.assertFalse(comment_area.find('form',id='comment-form'))
+        # 로그인하지 않으면 form을 보여주지 않음
+        
+        # 로그인을 한 상태
+        self.client.login(username='obama', password='somepassword')
+        # 클라이언트에서 로그인을 하는데 username이 'obama'이고 비밀번호가 'somepassword'인 경우
+        response = self.client.get(self.post_001.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content,'html.parser')
+        
+        comment_area = soup.find('div', id='comment-area')
+        self.assertNotIn('Log in and Leave a Comment', comment_area.text)
+        
+        comment_form = comment_area.find('form', id='comment-form')
+        self.assertTrue(comment.form.find('textarea', id='id_content'))
+        
+        response = self.client.post(
+            self.post_001.get_absolute_url() + 'new_comment/',
+            {
+                'content':'오바마의 댓글입니다.',
+            },
+            follow = True
+        )
+        
+        # 댓글의 응답이 제대로 왔는지 확인하기
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Comment.objects.count(), 2)
+        self.assertEqual(self.post_001.comment_set.count(), 2)
+        
+        new_comment = Comment.objects.last()
+        
+        soup = BeautifulSoup(response.content,'html.parser')
+        self.assertIn(new_comment.post.title,soup.title.text)
+        
+        comment_area = soup.find('div', id='comment-area')
+        new_comment_div = comment_area.find('div', id=f'comment-{new_comment.pk}')
+        self.assertIn('obama', new_comment_div.text)
+        self.assertIn('오바마의 댓글입니다.', new_comment_div.text)
+        
+        

@@ -14,7 +14,9 @@ urlpatterns = [
     path('category/<str:slug>/',views.category_page),
 #     views에 있는 category_page로 이동시킴
 #     https://project-ztsct.run.goorm.io/blog/category/programming
-#     programming만 분리해서 view.py의 category_page로 보냄    
+#     programming만 분리해서 view.py의 category_page로 보냄 
+    
+    path('<int:pk>/new_comment/', views.new_comment),
     
     # path('', views.index), Class 형태로 변환되었기 때문에 주석 처리한다.
     path('',views.PostList.as_view()),
