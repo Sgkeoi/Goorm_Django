@@ -349,7 +349,7 @@ class TestView(TestCase):
         self.assertNotIn('Log in and Leave a Comment', comment_area.text)
         
         comment_form = comment_area.find('form', id='comment-form')
-        self.assertTrue(comment.form.find('textarea', id='id_content'))
+        #self.assertTrue(comment.form.find('textarea', id='id_content'))
         
         response = self.client.post(
             self.post_001.get_absolute_url() + 'new_comment/',
@@ -373,5 +373,58 @@ class TestView(TestCase):
         new_comment_div = comment_area.find('div', id=f'comment-{new_comment.pk}')
         self.assertIn('obama', new_comment_div.text)
         self.assertIn('오바마의 댓글입니다.', new_comment_div.text)
+    
+    # 댓글 테스트
+    def test_comment_update(self):
+        comment_by_trump = Comment.objects.create(
+            post = self.post_001,
+            author = self.user_trump,
+            content = '트럼프의 댓글입니다.'
+        )
+    
+        # 로그인이 안 된 상태
+        response = self.client.get(self.post_001.get_absolute_url())
+        self.assertEqual(response.status_code,200)
+        soup = BeautifulSoup(response.content,'html.parser')
+
+        comment_area = soup.find('div', id='comment-area')
+        self.assertFalse(comment_area.find('a',id='comment-1-update-btn'))
+        self.assertFalse(comment_area.find('a',id='comment-2-update-btn'))
+
+        # 작성자가 아닌 계정이 로그인
+        self.client.login(username='obama', password='somepassword')
+        response = self.client.get(self.post_001.get_absolute_url())
+        self.assertEqual(response.status_code,200)
+        soup = BeautifulSoup(response.content,'html.parser')
+
+        comment_area = soup.find('div', id='comment-area')
+        self.assertFalse(comment_area.find('a',id='comment-2-update-btn'))
+        comment_001_update_btn = comment_area.find('a', id='comment-1-update-btn')
+        self.assertIn('edit', comment_001_update_btn.text)
+        self.assertEqual(comment_001_update_btn.attrs['href'], '/blog/update_comment/1/')
         
         
+        # edit 버튼이 있다고 가정하고 테스트
+        response = self.client.get('/blog/update_comment/1/')
+        self.assertEqual(response.status_code,200)
+        soup = BeautifulSoup(response.content,'html.parser')
+        
+        self.assertEqual('Edit Comment - Blog', soup.title.text)
+        update_comment_form = soup.find('form', id='comment-form')
+        content_textarea = update_comment_form.find('textarea', id='id_content')
+        self.assertIn(self.comment_001.content,content_textarea.text)
+        
+        response = self.client.post(
+            f'/blog/update_comment/{ self.comment_001.pk }/',
+            {
+                'content':"오바마의 댓글을 수정합니다."
+            },
+            follow = True
+            # follow = True : 끝나면 절대경로로 redirection한다.
+        )
+        
+        self.assertEqual(response.status_code,200)
+        soup = BeautifulSoup(response.content,'html.parser')
+        comment_001_div = soup.find('div', id='comment-1')
+        self.assertIn("오바마의 댓글을 수정합니다.",comment_001_div.text)
+        self.assertIn("Update: ",comment_001_div.text)
