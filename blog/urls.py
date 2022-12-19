@@ -4,6 +4,7 @@ from . import views
 
 # 경로 urls.py -> index.py
 urlpatterns = [
+    path('search/<str:q>/',views.PostSearch.as_view()),  # 글 검색하기
     path('delete_comment/<int:pk>/', views.delete_comment),
     path('update_comment/<int:pk>/', views.CommentUpdate.as_view()),
     path('update_post/<int:pk>/', views.PostUpdate.as_view()),

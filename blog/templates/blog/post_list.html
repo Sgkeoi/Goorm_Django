@@ -12,7 +12,9 @@
         {% endif %}
     {% endif %}
 
-                <h1>Blog {% if category %} <!-- 카테고리가 있으면 -->
+                <h1>Blog
+                    {% if search_info %} <small class="text-muted">{{ search_info }}</small>{% endif %}
+                    {% if category %} <!-- 카테고리가 있으면 -->
                         <span class="badge badge-info">{{ category }}</span>  <!-- badge 생성 -->
                         {% endif %}
                     {% if tag %}  <!-- tag가 있는가 -->
@@ -73,13 +75,33 @@
                     <h3>아직 게시물이 없습니다</h3>
                 {% endif %}
 
+                {% if is_paginated %}
                 <!-- Pagination -->
                 <ul class="pagination justify-content-center mb-4">
-                    <li class="page-item">
-                        <a class="page-link" href="#">&larr; Older</a>
-                    </li>
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#">Newer &rarr;</a>
-                    </li>
+                    
+                    <!-- 블로그 게시물이 5개 이상이면 Older가 활성화 아니면 비활성화 -->
+                    {% if page_obj.has_next %} <!-- 활성화 -->
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&larr; Older</a>
+                            <!-- &larr; : 왼쪽 화살표 -->
+                        </li>
+                    {% else %} <!-- 비활성화 -->
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">&larr; Older</a>
+                        </li>
+                    {% endif %}
+                    
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{{ page_obj.previous_page_number }}">Newer &rarr;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">Newer &rarr;</a>
+                        </li>
+                    {% endif %}
+                    
                 </ul>
+                {% endif %}
+
     {% endblock %}

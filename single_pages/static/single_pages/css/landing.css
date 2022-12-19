@@ -1,0 +1,18 @@
+body{
+    background: url('/static/single_pages/images/home2.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    /* cover : 화면 크기에 맞춤(반응형 페이지로 사용해야 하기 때문임) */
+    -moz-background-size: cover;
+    /* moz : 상하 화면에 맞춤*/
+    background-size: cover;
+    -o-background-size: cover;
+    /* o : 좌우 화면에 맞춤 */
+}
+
+section {
+    margin-bottom: 150px;
+}
+
+.card{
+    background-color: rgba(255,255,255, 0.6);
+}

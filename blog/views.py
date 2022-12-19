@@ -18,6 +18,8 @@ from django.utils.text import slugify
 
 from .forms import CommentForm
 
+from django.db.models import Q
+
 # --------------------------------------------------------------------------------------------------------------
 
 class CommentUpdate(LoginRequiredMixin, UpdateView):
@@ -119,6 +121,9 @@ class PostList(ListView):
     # index 함수의 역할을 대신하게 된다.
     # Blog의 urls를 전부 수정해야 한다.
     
+    # Older, Newer
+    paginate_by = 5
+    
     # None인 category가 몇 개가 있는가?
     def get_context_data(self, **kwargs):
         context = super(PostList, self).get_context_data()
@@ -202,6 +207,22 @@ def delete_comment(request, pk):
         return redirect(post.get_absolute_url())
     else:
         raise PermissionDenied
+
+class PostSearch(PostList):
+    paginate_by = None  # 검색 결과를 전부 다 보여주도록 설정하기
+    
+    def get_queryset(self):
+        q = self.kwargs['q']
+        post_list = Post.objects.filter(
+            Q(title__contains=q) | Q(tags__name__contains=q)
+        ).distinct()  # distinct : 중복 제거
+        return post_list  # 타이틀과 태그에서 찾은 자료를 중복 없는 자료를 반환
+    
+    def get_context_data(self, **kwargs):
+        context = super(PostSearch, self).get_context_data()
+        q = self.kwargs['q']
+        context['search_info'] = f'Search : {q} ({self.get_queryset().count()})'
+        return context
     
 
 # category=category : category로 필터링 한 것만 가지고 온다.
