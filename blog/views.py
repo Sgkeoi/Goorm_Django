@@ -192,6 +192,18 @@ def new_comment(request, pk):
     else:
         raise PermissionDenied
 
+def delete_comment(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    post = comment.post
+    
+    # 로그인이 되어 있고 작성자가 자신이라면
+    if request.user.is_authenticated and request.user == comment.author:
+        comment.delete()
+        return redirect(post.get_absolute_url())
+    else:
+        raise PermissionDenied
+    
+
 # category=category : category로 필터링 한 것만 가지고 온다.
 
 # from django.shortcuts import render
