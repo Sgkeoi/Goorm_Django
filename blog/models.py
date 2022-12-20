@@ -36,7 +36,7 @@ class Tag(models.Model):
     slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
     
     # 출력
-    def __str__(self):
+    def __str__ (self):
         return self.name
     
     # 주소를 받음

@@ -14,8 +14,8 @@ class CategoryAdmin(admin.ModelAdmin):
     # 자동으로 slug 생성
 
 # 태그 
-class TagAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug':('name',)}
+class TagAdmin(admin.ModelAdmin) :
+    prepopulated_fields = {'slug' : ('name', )}
     
 # post와 Category를 가지고 오기    
 admin.site.register(Category, CategoryAdmin)

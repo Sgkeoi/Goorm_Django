@@ -1,19 +1,242 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Kim Seung Gon의 Project</title>
+    <title>Django Project</title>
+    <link rel="stylesheet" href="{% static 'blog/bootstrap/bootstrap.min.css' %}" media="screen">
+    <link rel="stylesheet" href="{% static 'single_pages/css/about_me.css' %}" media="screen">
 </head>
 <body>
-    <nav>
-        <a href="/blog/">Blog</a>
-        <a href="/about_me">About_me</a>
-    </nav>    
     
-    <h2>이력</h2>
-    <h2>Portfolio</h2>
-    <h3>아직 미완성입니다:(</h3>
-</body>
+    {% include 'blog/navbar.html' %}
+
+    <!-- 구역 나누기 -->
+    <section>
+        <div class="container mt-4"> <!-- 클래스 컨테이너 -->
+            <div class="row"> <!-- low -->
+                <div class="col-lg-8"> <!-- column -->
+                    <h1>About Me</h1><br>
+                    <h3><b>통계분석</b>, 야구, 머신러닝</h3><br>
+                    <p>
+                        Data Information(Major), Economics(Minor)<br>
+                    </p>
+                    <ul>
+                        <li>경력사항</li>
+                        <ul>
+                            <li>?</li>
+                            <li>!</li>
+                        </ul>
+                    </ul>
+                    <ul>
+                        <li>사용 가능 툴</li>
+                        <ul>
+                            <li>JAVA</li>
+                            <li><b>Python</b>(통계, 시각화, 머신러닝)</li>
+                            <li>MYSQL</li>
+                            <li>Linux</li>
+                            <li>HTML, CSS, JS</li>
+                            <li>SPSS</li>
+                            <li>SAS</li>
+                            <li>R</li>
+                        </ul>
+                    </ul>
+                    <ul>
+                        <li>활동 사이트</li>
+                        <ul>
+                            <li><a href="https://www.kaggle.com/kimseg">Kaggle</a></li>
+                        </ul>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <img class="img-fluid" src="{% static 'single_pages/images/profilehead.jpg' %}" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="bg-light margin-for-footer"> <!-- 섹션 기준으로 다르게 할 수 있음 -->
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1>Portfolio</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <!-- 주의 : 버전은 4.6을 사용해야 한다. --> 
+                    <div class="card" data-toggle="modal" data-target="#obp">
+                        <!-- 카드 이미지 -->
+                        <img class="card-img-top" src="{% static 'single_pages/images/baseball.jpg' %}" alt="">
+                        <!-- 카드 body -->
+                        <div class="card-body">
+                            <!-- 내용 -->
+                            <h5 class="card-title"><b>출루율이 높은 선수들은 어떤 특징을 가지고 있는가?</b></h5>
+                            <p>야구선수들을 분석할 때 이 선수는 "선구안이 좋다."라는 말을 듣는 선수들이 있다.<br>
+                                선구안에 근간이 되는 출루율에 대한 지표를 알아보고 출루율이 높고 볼넷을 잘 골라나가는 타자들이
+                                어떤 특징을 가지고 있는지 알아보자.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <!-- 주의 : 버전은 4.6을 사용해야 한다. --> 
+                    <div class="card" data-toggle="modal" data-target="#wine">
+                        <!-- 카드 이미지 -->
+                        <img class="card-img-top" src="{% static 'single_pages/images/redwine.jpg' %}" alt="">
+                        <!-- 카드 body -->
+                        <div class="card-body">
+                            <!-- 내용 -->
+                            <h5 class="card-title"><b>레드 와인 퀄리티 분류</b></h5>
+                            <p>레드 와인은 몇 개의 점수로 그 퀄리티가 분류된다.<br>
+                                레드 와인에 퀄리티를 결정하는 변수들을 하나씩 알아보고 EDA와 시각화를 통해 분석해보자.
+                                그리고 머신러닝을 통해 레드 와인의 퀄리티를 분류하는 변수들의 중요성을 알아보자.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <!-- 주의 : 버전은 4.6을 사용해야 한다. --> 
+                    <div class="card" data-toggle="modal" data-target="#hyundai">
+                        <!-- 카드 이미지 -->
+                        <img class="card-img-top" src="{% static 'single_pages/images/car.jpg' %}" alt="">
+                        <!-- 카드 body -->
+                        <div class="card-body">
+                            <!-- 내용 -->
+                            <h5 class="card-title"><b>중고차 가격 예측</b></h5>
+                            <p>현대자동차 중고차 가격 예측<br>
+                                현대자동차 차량 변수들을 통해 현대 자동차 중고차의 가격을 예측해보자.
+                                독립변수들의 특성을 알아보고 자동차 가격을 예측하는데 가장 중요한 요인이 무엇인지 알아보도록 하자.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="obp" tabindex="-1" aria-labelledby="obpModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id=obpModalLabel>출루율이 높은 선수들은 어떤 특징을 가지고 있는가?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+                <!-- 이미지 -->
+                <div class="col-lg-7">
+                    <img class="img-fluid" src="{% static 'single_pages/images/baseball.jpg' %}" alt="">
+                </div>
+                <div class="col-lg-5">
+                    <p>
+                     야구선수들을 분석할 때 이 선수는 "선구안이 좋다."라는 말을 듣는 선수들이 있다.<br>
+                     선구안에 근간이 되는 출루율에 대한 지표를 알아보고 출루율이 높고 볼넷을 잘 골라나가는 타자들이
+                     어떤 특징을 가지고 있는지 알아보자.   
+                    </p>
+                </div>
+            </div> <!-- row에 있는 div -->
+          </div>
+
+
+            
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Modal2 -->
+    <div class="modal fade" id="wine" tabindex="-1" aria-labelledby="wineModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id=wineModalLabel>레드 와인 퀄리티 분류</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+                <!-- 이미지 -->
+                <div class="col-lg-7">
+                    <img class="img-fluid" src="{% static 'single_pages/images/redwine.jpg' %}" alt="">
+                </div>
+                <div class="col-lg-5">
+                    <p>
+                     레드 와인은 몇 개의 점수로 그 퀄리티가 분류된다.<br>
+                     레드 와인에 퀄리티를 결정하는 변수들을 하나씩 알아보고 EDA와 시각화를 통해 분석해보자.
+                     그리고 머신러닝을 통해 레드 와인의 퀄리티를 분류하는 변수들의 중요성을 알아보자.
+                    </p>
+                </div>
+            </div> <!-- row에 있는 div -->
+          </div>
+
+
+            
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Modal3 -->
+    <div class="modal fade" id="hyundai" tabindex="-1" aria-labelledby="hyundaiModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id=hyundaiModalLabel>중고차 가격 예측</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+                <!-- 이미지 -->
+                <div class="col-lg-7">
+                    <img class="img-fluid" src="{% static 'single_pages/images/car.jpg' %}" alt="">
+                </div>
+                <div class="col-lg-5">
+                    <p>
+                     현대자동차 중고차 가격 예측<br>
+                     현대자동차 차량 변수들을 통해 현대 자동차 중고차의 가격을 예측해보자.
+                     독립변수들의 특성을 알아보고 자동차 가격을 예측하는데 가장 중요한 요인이 무엇인지 알아보도록 하자. 
+                    </p>
+                </div>
+            </div> <!-- row에 있는 div -->
+          </div>
+
+
+            
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+</body>    
+    
+    <div class="fixed-bottom">
+        {% include 'blog/footer.html' %}
+    </div>
+    
+    <!-- footer -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    
 </html>
-
-

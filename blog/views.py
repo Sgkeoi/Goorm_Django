@@ -57,11 +57,16 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
         tags_str = self.request.POST.get('tags_str')  # POST : post 방식으로 매서드가 온 것
         if tags_str:
             tags_str = tags_str.strip()  # strip() : 공백 제거
-            tags_str = tags_str.replace(',', ';')  # ,를 ;로 변경하기
+            tags_str = tags_str.replace(',', ';').replace(' ', '')  # ,를 ;로 변경하기
+            
+            while ';;' in tags_str:
+                tags_str = tags_str.replace(';;', ';')            
+            
             tags_list = tags_str.split(';')  # ;을 기준으로 전부 나눠짐
                 
             for t in tags_list:
                 t = t.strip()
+                if len(t) < 1: continue
                 tag, is_tag_created = Tag.objects.get_or_create(name=t)
                 # 같은 이름을 갖는 태그가 없으면 생성하고, 있으면 그대로 가져온다.
                 if is_tag_created:
@@ -80,7 +85,7 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
             raise PermissionDenied
             # 권한이 없다는 것을 알려줌
 
-class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+class PostCreate(LoginRequiredMixin, CreateView, UserPassesTestMixin):
     model = Post # Post 모듈을 사용하겠음
     fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category']
     
@@ -93,19 +98,34 @@ class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             form.instance.author = current_user
             
             response = super(PostCreate, self).form_valid(form)
-            tags_str = self.request.POST.get('tags_str')  # POST : post 방식으로 매서드가 온 것
-            if tags_str:
-                tags_str = tags_str.strip()  # strip() : 공백 제거
-                tags_str = tags_str.replace(',', ';')  # ,를 ;로 변경하기
-                tags_list = tags_str.split(';')  # ;을 기준으로 전부 나눠짐
+            tags_str = self.request.POST.get('tags_str') # 이 POST 는 request 로 받아온 method 형식을 말하는거임 POST 방식으로 날라왔당
+            if tags_str : # 만약 태그가 있다면
+                tags_str = tags_str.strip() # strip() : 공백 제거
+                #tags_str = tags_str.replace(',', ';')  # , 로 나눠서 입력 들어오면 ; 로 바꿔주기
+                tags_str = tags_str.replace(',', ';').replace(' ', '') # 중간에 공백이 있는 경우를 모두 삭제하도록 수정
                 
-                for t in tags_list:
-                    t = t.strip()
-                    tag, is_tag_created = Tag.objects.get_or_create(name=t)
-                    # 같은 이름을 갖는 태그가 없으면 생성하고, 있으면 그대로 가져온다.
-                    if is_tag_created:
-                        tag.slug = slugify(t, allow_unicode=True)    
-                        # 새로 생성된 것이 있으면 한글 처리한다.
+                while ';;' in tags_str:
+                    tags_str = tags_str.replace(';;', ';') # 연속된 ;;가 있는 경우 삭제
+                    
+                tags_list = tags_str.split(';')   # ; 기준으로 태그 나눠주기
+                
+                # 문제
+                # 문제는 ,;, 를 입력하면, 현재 소스코드 상 ;;;으로 바뀌게 되고, 이 상태에서 ;으로
+                # splite을 하기 때문에, 아무것도 없는 문자가 연속으로 들어가는 문제가 발생합니다.
+                # 그래서 더 이상 unique 하지 않은 값이 들어가는 문제가 있는거죠.
+                # 책에서 가이드를 드릴 때는 blog는 admin 권한이 있는 사람이 쓰기 때문에 그런 시도를
+                # 하지 않을 것이라고 가정하고, 완벽하지는 않지만 설명이 길지 않아도 되는 임시방편적 해결책을 드렸습니다.
+                
+                for t in tags_list :
+                    t = t.strip()     # 혹시 딸려들어왔을지 모를 공백을 제거
+                    if len(t) < 1: continue
+                    # [중요] split한 t의 길이가 3 미만인 경우에는 tag를 생성하지 않도록 내용을 추가
+                    tag, is_tag_created = Tag.objects.get_or_create(name = t)
+                    # 만약 같은 이름을 가진 태그가 없으면 생성을 하고,
+                    # 있다면 태그 걸어주기
+                    
+                    if is_tag_created :
+                        tag.slug = slugify(t, allow_unicode=True)
                         tag.save()
                     self.object.tags.add(tag)
             
@@ -162,18 +182,18 @@ def category_page(request, slug):
     )
 
 # 태그 페이지
-def tag_page(request, slug):
-    tag = Tag.objects.get(slug=slug)
+def tag_page(request, slug) :
+    tag = Tag.objects.get(slug = slug)
     post_list = tag.post_set.all()
     
     return render(
         request,
         'blog/post_list.html',
         {
-            'post_list':post_list,
-            'tag':tag,
-            'categories':Category.objects.all(),
-            'no_category_post_count':Post.objects.filter(category=None).count(),
+            'post_list' : post_list,
+            'tag' : tag,
+            'categories' : Category.objects.all(),
+            'no_category_post_count' : Post.objects.filter(category = None).count(),
         }
     )
 
