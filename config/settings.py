@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     # allauth.socialaccount.providers.google : 구글 로그인
     'blog',
     'single_pages',
+    'board',
 ]
 
 MIDDLEWARE = [
